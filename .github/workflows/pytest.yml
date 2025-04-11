@@ -1,0 +1,27 @@
+name: Run Pytest on Pull Requests
+
+on:
+  pull_request:
+    branches:
+      - main  # Trigger workflow on pull requests to the main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # Check out the repository code
+
+    - name: Set up Python
+      uses: actions/setup-python@v4  # Set up Python environment
+      with:
+        python-version: '3.x'  # Specify Python version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip  # Upgrade pip
+        pip install pytest  # Install pytest
+
+    - name: Run tests
+      run: pytest -v  # Run pytest in verbose mode to list all test cases
