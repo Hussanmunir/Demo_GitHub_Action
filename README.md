@@ -133,6 +133,39 @@ Forking creates a personal copy of the repository under your GitHub account. Fol
    - Click "New Pull Request" and select your branch.
    - Add a description and submit the pull request.
 
+## Delete Your Branch After Merging (Best Practice)
+
+After your pull request has been successfully merged, it's important to delete your branch. Here's why and how:
+
+**Why Delete the Branch?**
+- **Clean Repository**: Keeps the repository clean and free from unnecessary branches.
+- **Reduce Confusion**: Prevents confusion about which branches are active and current.
+- **Easier Maintenance**: Makes it easier for team members to navigate and manage the repository.
+- **Better Collaboration**: Reduces clutter and makes the workflow clearer for all contributors.
+
+**How to Delete Your Branch**:
+
+1. **Delete the Remote Branch on GitHub** (Recommended):
+   - After merging, GitHub will typically offer a "Delete branch" button on the pull request page.
+   - Alternatively, you can delete it from the command line:
+
+   ```bash
+   git push origin --delete your-branch-name
+   ```
+
+2. **Delete the Local Branch**:
+   - Delete the branch from your local machine:
+
+   ```bash
+   git branch -d your-branch-name
+   ```
+
+   - If the branch hasn't been merged locally, use the force flag:
+
+   ```bash
+   git branch -D your-branch-name
+   ```
+
 ## Where to See Triggered Test Cases
 
 - Once the pull request is created, the GitHub Actions workflow will automatically run the test cases.
