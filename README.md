@@ -143,9 +143,26 @@ After your pull request has been successfully merged, it's important to delete y
 - **Easier Maintenance**: Makes it easier for team members to navigate and manage the repository.
 - **Better Collaboration**: Reduces clutter and makes the workflow clearer for all contributors.
 
+
 **How to Delete Your Branch**:
 
-1. **Delete the Remote Branch on GitHub** (Recommended):
+**Update your local `main` branch (Important step before deleting your branch)**:
+
+1. **Switch to your `main` branch**:
+
+   ```bash
+   git checkout main
+   ```
+
+2. **Pull the latest merged changes**:
+
+   - Pull from your fork's remote:
+
+     ```bash
+     git pull origin main
+     ```
+
+3. **Delete the Remote Branch on GitHub** (Recommended):
    - After merging, GitHub will typically offer a "Delete branch" button on the pull request page.
    - Alternatively, you can delete it from the command line:
 
@@ -153,7 +170,7 @@ After your pull request has been successfully merged, it's important to delete y
    git push origin --delete your-branch-name
    ```
 
-2. **Delete the Local Branch**:
+4. **Delete the Local Branch**:
    - Delete the branch from your local machine:
 
    ```bash
