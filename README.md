@@ -68,6 +68,37 @@ Demo_UnitTest_Python/test_math_functions_pytest.py::test_divide PASSED          
 
 This output indicates that all test cases have passed successfully.
 
+## How to Fork the Repository
+
+Forking creates a personal copy of the repository under your GitHub account. Follow these steps:
+
+1. **Navigate to the Repository**:
+   - Go to the main repository page on GitHub.
+
+2. **Click the Fork Button**:
+   - In the top-right corner of the page, click the **Fork** button.
+   - This will create a copy of the repository under your GitHub account.
+
+3. **Wait for the Fork to Complete**:
+   - GitHub will redirect you to your forked repository once the process is complete.
+   - You should now see your username in the repository path (e.g., `your-username/Demo_GitHub_Action`).
+
+4. **Clone Your Forked Repository**:
+   - Copy the HTTPS or SSH URL of your forked repository.
+   - Open your terminal and run:
+
+   ```bash
+   git clone https://github.com/your-username/Demo_GitHub_Action.git
+   ```
+
+5. **Add the Upstream Remote** (Optional but Recommended):
+   - This allows you to keep your fork synchronized with the original repository.
+
+   ```bash
+   cd Demo_GitHub_Action
+   git remote add upstream https://github.com/original-owner/Demo_GitHub_Action.git
+   ```
+
 ## How to Make a Pull Request
 
 1. **Create a New Branch**:
