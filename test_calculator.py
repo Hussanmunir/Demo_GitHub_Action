@@ -8,13 +8,14 @@ class TestCalculator:
     def test_add(self):
         assert self.calculator.add(2, 3) == 5
 
-    '''
+    
     def test_add_negative(self):
         assert self.calculator.add(-1, 1) == 0
 
     def test_subtract(self):
         assert self.calculator.subtract(5, 3) == 2
-
+    
+    '''
     def test_subtract_negative(self):
         assert self.calculator.subtract(0, 4) == -4
 
