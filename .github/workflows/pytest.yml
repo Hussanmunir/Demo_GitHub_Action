@@ -65,4 +65,4 @@ jobs:
     steps:
       # Step 1: Print deployment-ready message
       - name: Ready for Deployment
-        run: echo "🚀 Code merged into main. Ready for deployment
+        run: echo "✅ Code merged into main. Ready for deployment"
