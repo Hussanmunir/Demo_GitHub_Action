@@ -1,37 +1,41 @@
 # GitHub Actions Workflow for Calculator Functions
 
-This repository demonstrates how to set up a GitHub Actions workflow to automate testing for a simple calculator application using Pytest. The workflow ensures that all test cases pass before merging any pull request.
+This repository demonstrates how to set up a complete **CI/CD pipeline** using GitHub Actions with automated testing and deployment stages. The workflow validates code on pull requests (CI), then deploys to staging and production environments after merge (CD).
 
 ## Features
 
-- **Trigger**: The workflow runs on every pull request to the `main` branch.
-- **Test Framework**: Uses Pytest to validate the functionality of the calculator.
-- **Merge Restriction**: Code cannot be merged unless all tests pass.
-- **Code Owner Approval**: Only the code owner can merge pull requests.
+- **CI Phase**: Automated tests run on every pull request to validate code before merge
+- **CD Phase**: Automated deployment to staging and production environments on merge
+- **Test Framework**: Uses Pytest to validate the functionality of the calculator
+- **Deployment Pipeline**: Sequential deployment to staging → production with dependency gates
+- **Merge Restriction**: Code cannot be merged unless all tests pass
+- **Code Owner Approval**: Only the code owner can merge pull requests
 
 ## File Structure
 
 ```
 Demo_GitHub_Action/
-    calculator.py          # Contains the Calculator class with basic mathematical operations
-    LICENSE                # License information for the project
-    README.md              # Documentation for the project
-    test_calculator.py     # Pytest test cases for the Calculator class
-    .github/workflows/pytest.yml  # GitHub Actions workflow configuration for running Pytest
+    calculator.py              # Contains the Calculator class with basic mathematical operations
+    test_calculator.py         # Pytest test cases for the Calculator class
+    requirements.txt           # Python dependencies (pytest)
+    LICENSE                    # License information for the project
+    README.md                  # Documentation for the project
+    .github/workflows/pytest.yml  # GitHub Actions workflow configuration for CI/CD pipeline
 ```
 
 ## Requirements
 
 - Python 3.8 or higher
-- `pytest` (install using `pip install pytest`)
+- Dependencies listed in `requirements.txt`
 
 ## How to Run Tests Locally
 
-1. Install dependencies:
+1. Install dependencies from `requirements.txt`:
 
    ```bash
-   pip install pytest
+   pip install -r requirements.txt
    ```
+
 2. Run tests:
 
    ```bash
@@ -67,6 +71,30 @@ Demo_UnitTest_Python/test_math_functions_pytest.py::test_divide PASSED          
 ```
 
 This output indicates that all test cases have passed successfully.
+
+## CI/CD Pipeline Overview
+
+The workflow consists of **4 jobs** that run automatically:
+
+### **CI Phase (Continuous Integration)**
+- **Job 1 — Build & Test**: Runs on every pull request
+  - Validates code by running all tests
+  - Ensures code quality before merge
+  - Blocks merge if tests fail
+
+### **CD Phase (Continuous Deployment)**
+- **Job 2 — Ready for Deployment**: Notifies after merge to main
+- **Job 3 — Deploy to Staging**: Deploys to staging environment
+  - Tests performance, configuration, and security
+  - Acts as a pre-production environment
+- **Job 4 — Deploy to Production**: Deploys to production **after staging succeeds**
+  - Only runs if staging deployment is successful
+  - Ensures code has been tested in staging first
+
+**Workflow Flow:**
+```
+Pull Request → Run Tests (CI) → Merge to main → Deploy Staging → Deploy Production (CD)
+```
 
 ## How to Fork the Repository
 
@@ -189,9 +217,14 @@ After your pull request has been successfully merged, it's important to delete y
 - Navigate to the "Actions" tab in your GitHub repository to view the status of the triggered tests.
 - You can also see the test results directly in the pull request under the "Checks" section.
 
-## How to Use
+## Workflow
 
-1. **Create a Pull Request**: Push your changes to a new branch and create a pull request.
-2. **Run Tests**: The workflow will automatically run all Pytest test cases.
-3. **Review Results**: Ensure all tests pass. If any test fails, fix the issues and push the changes.
-4. **Approval and Merge**: The code owner reviews and merges the pull request if all tests pass.
+1. **Create a Pull Request**: Push your changes to a new branch and create a pull request
+2. **Run Tests**: The workflow automatically runs all Pytest test cases (CI phase)
+3. **Review Results**: Ensure all tests pass
+   - If tests fail, fix the issues and push changes
+   - The workflow will re-run automatically
+4. **Approval and Merge**: The code owner reviews and merges the pull request if all tests pass
+5. **Automatic Deployment**: After merge, the deployment pipeline runs (CD phase)
+   - Code deploys to staging first
+   - Then to production (if staging succeeds)
