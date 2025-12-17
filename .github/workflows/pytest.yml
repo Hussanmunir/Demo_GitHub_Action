@@ -3,6 +3,7 @@
 # CI/CD Pipeline (Single Workflow)
 # - CI: Run tests on pull requests to main
 # - CD: After merge to main, print "Ready for deployment" message
+# - Deploy to staging and production sequentially (note: staging/production deployment is simulated)
 # ============================================
 
 name: CI/CD Pipeline (PR Tests + Deployment Message)
@@ -19,11 +20,12 @@ on:
       - main
 
 jobs:
-  # --------------------------------------------
-  # Job 1 — CI on Pull Requests
-  # Purpose: Validate code BEFORE merging into main
-  # --------------------------------------------
-  pr-tests:
+  # ============================================
+  # Job 1 — CI (Continuous Integration)
+  # • Phase: CI - Code Validation
+  # • Trigger: On every pull request to main
+  # ============================================
+  Build_Test:
     if: ${{ github.event_name == 'pull_request' }}  # Run only for PR events
     runs-on: ubuntu-latest
 
@@ -36,13 +38,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'  # Use latest Python 3.x version
+          python-version: '3.12'  # Use latest Python 3.x version
 
-      # Step 3: Install dependencies (skip requirements.txt as requested)
+      # Step 3: Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install -r requirements.txt
 
       # Step 4: Run tests using pytest
       - name: Run tests
@@ -53,11 +55,12 @@ jobs:
         if: success()
         run: echo "✅ Tests passed on PR. Ready for manual review and merge."
 
-  # --------------------------------------------
-  # Job 2 — Deployment Message After Merge
-  # Purpose: Signal readiness AFTER merge completes
-  # --------------------------------------------
-  deploy-message:
+  # ============================================
+  # Job 2 — CD (Continuous Deployment) - Ready
+  # • Phase: CD - Post-Merge Notification
+  # • Trigger: On push to main (after PR merge)
+  # ============================================
+  Deploy-message:
     # Run only when code is pushed to main (after merge)
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
@@ -66,3 +69,38 @@ jobs:
       # Step 1: Print deployment-ready message
       - name: Ready for Deployment
         run: echo "✅ Code merged into main. Ready for deployment"
+
+  # ============================================
+  # Job 3 — CD (Continuous Deployment) - Stage 1
+  # • Phase: CD - Staging Deployment
+  # • Trigger: On push to main (after PR merge)
+  # ============================================
+  Deploy-staging:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    #environment: staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "1️⃣ Deploying to staging..."
+      - run: echo "2️⃣ Running staging tests (e.g.,Performance, configuration, security)..."
+      - run: echo "3️⃣ ✅ Staging deployment successful"
+      # Note: Replace echo commands with actual deployment scripts
+      # Example: docker build, docker push, kubectl apply, etc.
+
+  # ============================================
+  # Job 4 — CD (Continuous Deployment) - Stage 2
+  # • Phase: CD - Production Deployment (Final)
+  # • Prerequisite: Waits for Job 3 (staging) success
+  # ============================================
+  Deploy-production:
+    needs: Deploy-staging  # ← CRITICAL: Waits for staging!
+    #environment: production
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "🎯 Deploying to production (AFTER staging)..."
+      - run: echo "📦 Production deployment in progress..."
+      - run: echo "🎉 ✅ Production deployment complete!"
+      # Note: Replace echo commands with actual deployment scripts
+      # Example: docker pull, docker run, kubectl apply, etc.
+      # IMPORTANT: This job ONLY runs AFTER staging deployment succeeds!
